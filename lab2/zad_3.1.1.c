@@ -73,7 +73,7 @@ void sort(int t[], int size) {
   for (int i = 0; i < size - 1; i++) {
     for (int j = 0; j < size - i - 1; j++) {
       if (t[j] > t[j + 1]) {
-	swap(&t[j], &t[j + 1]);
+	      swap(&t[j], &t[j + 1]);
       }
     }
   }
@@ -88,15 +88,15 @@ int one_two(int a[], int sizeA, int b[], int sizeB, int result[]) {
   while (idxA != sizeA || idxB != sizeB) {
     if (idxB == sizeB || (idxA != sizeA && a[idxA] < b[idxB])) {
       if (a[idxA] > lastVal || first) {
-	result[idxResult++] = a[idxA];
-	lastVal = a[idxA];
+	      result[idxResult++] = a[idxA];
+	      lastVal = a[idxA];
       }
       idxA++;
     }
     else {
       if (b[idxB] > lastVal || first) {
-	result[idxResult++] = b[idxB];
-	lastVal = b[idxB];
+	      result[idxResult++] = b[idxB];
+	      lastVal = b[idxB];
       }
       idxB++;
     }
