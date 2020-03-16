@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool triangular(int** matrix, int n) {
+bool triangular(int **matrix, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (i < j) {
@@ -19,8 +19,8 @@ int main() {
     int n;
     scanf("%d", &n);
 
-    int** matrix = malloc(n * sizeof(int *));
-    matrix[0] = malloc(n * n * sizeof(int));
+    int **matrix = malloc(n * sizeof(**matrix));
+    matrix[0] = malloc(n * n * sizeof(matrix[0]));
     for (int i = 1; i < n; i++) {
         matrix[i] = matrix[0] + i * n;
     }
