@@ -37,11 +37,11 @@ int getS(char *message) {
     int result = 0;
 
     //skip trailing spaces
-    while (message != NULL && !isLetter(*message)) {
+    while (*message != '\0' && !isLetter(*message)) {
         message++;
     }
 
-    while (message != NULL && isLetter(*message)) {
+    while (*message != '\0' && isLetter(*message)) {
         result++;
         message++;
     }
