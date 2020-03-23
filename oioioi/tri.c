@@ -19,8 +19,8 @@ int main() {
     int n;
     scanf("%d", &n);
 
-    int **matrix = malloc(n * sizeof(**matrix));
-    matrix[0] = malloc(n * n * sizeof(matrix[0]));
+    int **matrix = malloc(n * sizeof(*matrix));
+    matrix[0] = malloc(n * n * sizeof(**matrix));
     for (int i = 1; i < n; i++) {
         matrix[i] = matrix[0] + i * n;
     }
