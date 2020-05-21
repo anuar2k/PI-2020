@@ -9,13 +9,28 @@ typedef struct node {
 } node;
 
 int randomize_height(int max_height) {
-    int random = rand();
-    int result = 1;
-    while (result < max_height && random % 2 == 0) {
-        random /= 2;
+    int result = 0;
+    do {
         ++result;
     }
+    while (result < max_height && rand() % 2 == 0);
     return result;
+}
+
+void add(node* list, int max_height, int value) {
+    int height = randomize_height(max_height);
+    node* to_add = malloc(sizeof(*to_add) + height * sizeof(node*));
+    to_add->value = value;
+    int lane = max_height;
+    while (lane--) {
+        while (list->next[lane] && list->next[lane]->value < value) {
+            list = list->next[lane];
+        }
+        if (lane < height) {
+            to_add->next[lane] = list->next[lane];
+            list->next[lane] = to_add;
+        }
+    }
 }
 
 bool find(node* list, int max_height, int value) {
@@ -31,47 +46,27 @@ bool find(node* list, int max_height, int value) {
     return false;
 }
 
-void add(node* list, int max_height, int value) {
-    //do we need this check? - depends on data
-    if (!find(list, max_height, value)) {
-        int height = randomize_height(max_height);
-        node* to_add = malloc(sizeof(*to_add) + height * sizeof(node*));
-        to_add->value = value;
+void rmv(node* list, int max_height, int value) {
+    int lane = max_height;
+    node* to_free = NULL;
 
-        int lane = height;
-        while (lane--) {
-            while (list->next[lane] && list->next[lane]->value < value) {
-                list = list->next[lane];
+    outer:
+    while (lane--) {
+        while (list->next[lane] && list->next[lane]->value <= value) {
+            if (list->next[lane]->value == value) {
+                to_free = list->next[lane];
+                list->next[lane] = list->next[lane]->next[lane];
+                goto outer;
             }
-            if (lane < height) {
-                to_add->next[lane] = list->next[lane];
-                list->next[lane] = to_add;
-            }
+            list = list->next[lane];
         }
     }
-}
-
-void rmv(node* list, int max_height, int value) {
-    //do we need this check? - depends on data
-    if (find(list, max_height, value)) {
-        int lane = max_height;
-        node* to_free = NULL;
-
-        outer:
-        while (lane--) {
-            while (list->next[lane] && list->next[lane]->value <= value) {
-                if (list->next[lane]->value == value) {
-                    to_free = list->next[lane];
-                    list->next[lane] = list->next[lane]->next[lane];
-                    goto outer;
-                }
-                list = list->next[lane];
-            }
-        }
+    if (to_free) {
         free(to_free);
     }
 }
 
+#ifdef DEBUG
 void print_list(node* list, int max_height) {
     int lane = max_height;
     while (lane--) {
@@ -84,6 +79,7 @@ void print_list(node* list, int max_height) {
         printf("->NULL\n");
     }
 }
+#endif
 
 int main() {
     srand(time(NULL));
@@ -103,13 +99,17 @@ int main() {
         while (a--) {
             scanf("%d", &curr);
             add(list, h, curr);
+            #ifdef DEBUG
             print_list(list, h);
+            #endif
         }
 
         while (r--) {
             scanf("%d", &curr);
             rmv(list, h, curr);
+            #ifdef DEBUG
             print_list(list, h);
+            #endif
         }
 
         while (f--) {
@@ -120,7 +120,9 @@ int main() {
             else {
                 printf("N\n");
             }
+            #ifdef DEBUG
             print_list(list, h);
+            #endif
         }
 
         while (list) {
