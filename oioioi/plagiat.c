@@ -30,7 +30,7 @@ int main() {
         for (int j = 0; j < n; ++j) {
             int deletion_cost = v0[j + 1] + 1;
             int insertion_cost = v1[j] + 1;
-            int substitution_cost = v0[j] + a[i] != b[j];
+            int substitution_cost = v0[j] + (a[i] != b[j]);
 
             int new_val = deletion_cost;
             if (insertion_cost < new_val) {
