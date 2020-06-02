@@ -58,82 +58,50 @@ node* find(node* tree, int key) {
     return NULL;
 }
 
-node* succ(node* tree) {
-    if (tree->right) {
-        tree = tree->right;
-        while (tree->left) {
-            tree = tree->left;
-        }
-        return tree;
+node* min(node* tree) {
+    //tree is always not null
+    while (tree->left) {
+        tree = tree->left;
     }
-    
-    node* tmp = tree->parent;
-    while (tmp && tmp->left != tree) {
-        tree = tmp;
-        tmp = tree->parent;
-    }
-    return tmp;
+    return tree;
 }
 
 node* rmv(node* tree, int key) {
-    node* to_delete = find(tree, key);
-    if (to_delete) {
-        if (!to_delete->left) {
-            node* parent = to_delete->parent;
-            node* right = to_delete->right;
-
-            free(to_delete->value);
-            free(to_delete);
-
-            if (parent) {
-                if (key < parent->key) {
-                    parent->left = right;
-                }
-                else {
-                    parent->right = right;
-                }
-                return tree;
-            }
-            else {
-                return right;
-            }
-        }
-
-        if (!to_delete->right) {
-            node* parent = to_delete->parent;
-            node* left = to_delete->left;
-            
-            free(to_delete->value);
-            free(to_delete);
-
-            if (parent) {
-                if (key < parent->key) {
-                    parent->left = left;
-                }
-                else {
-                    parent->right = left;
-                }
-                return tree;
-            }
-            else {
-                return left;
-            }
-        }
-
-        node* successor = succ(to_delete);
-        if (successor->key < successor->parent->key) {
-            successor->parent->left = successor->right;
-        }
-        else {
-            successor->parent->right = successor->right;
-        }
-        free(to_delete->value);
-        to_delete->value = successor->value;
-        to_delete->key = successor->key;
-        free(successor);
-        
-        return tree;
+    if (!tree) {
+        return NULL;
     }
+
+    if (key < tree->key) {
+        tree->left = rmv(tree->left, key);
+    }
+    else if (key > tree->key) {
+        tree->right = rmv(tree->right, key);
+    }
+    else {
+        if (!tree->left) {
+            node* tmp = tree->right;
+            free(tree->value);
+            free(tree);
+            return tmp;
+        }
+        else if (!tree->right) {
+            node* tmp = tree->left;
+            free(tree->value);
+            free(tree);
+            return tmp;
+        }
+
+        node* succ = min(tree->right);
+
+        tree->key = succ->key;
+
+        char* valueSwap = tree->value;
+        tree->value = succ->value;
+        succ->value = valueSwap;
+
+        tree->right = rmv(tree->right, succ->key);
+    }
+
     return tree;
 }
 
@@ -175,5 +143,5 @@ int main() {
             printf("NO\n");
         }
     }
-    freeTree(tree);
+    //freeTree(tree);
 }
